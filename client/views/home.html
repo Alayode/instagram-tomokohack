@@ -1,0 +1,48 @@
+<!--
+Author: Chris Samuel
+Date: Feb 18 2015
+Title:Home.html
+
+this template consists of 3 main parts:
+
+  - User is authenticated via Email or OAuth 2.0 and has a valid Instagram username.
+  - User is not authenticated. ( THis could be a visitor first time loading the page.)
+  - User is authenticated via Email but does not have a valid Instagram username.
+
+
+-->
+
+<div class="container">
+
+<div ng-if="isAuthenticated() && currentUser.username">
+    <div class="row">
+      <div ng-repeat="photo in photos" class="col-lg-2 col-sm-3 col-xs-4">
+        <a href="#/photo/{{photo.id}}">
+        <img ng-src="{{photo.images.standard_resolution.url}}" class="thumbnail img-responsive">
+        </a>
+      </div>
+    </div>
+</div>
+
+<div ng-if="!isAuthenticated()">
+  <div class="jumbotron bg-danger">
+    <h2><i class="ion-images"></i>Instagram</h2>
+    <p>This is a basic Instagram clone powered by <strong>Satellizer</strong>
+      <p>
+        <a class="btn btn-lg btn-info" href="#/login"><i class="ion-log-in"></i>Log in </a>
+        <a class="btn btn-lg btn-primary" href="#/signup"><i class="ion-person-add"></i>Sign Up </a>
+      </p>
+    </div>
+  </div>
+
+  <div ng-if="isAuthenticated() && !currentUser.username" class="center-form panel">
+   <div class="panel-body">
+     <h5 class="text-center"><i class="ion-link"></i> Link Account</h5>
+     <p>To complete the registration process you must link your Instagram account.</p>
+     <button class="btn btn-block btn-instagram" ng-click="linkInstagram()">
+       <i class="ion-social-instagram"></i> Sign in with Instagram
+     </button>
+   </div>
+ </div>
+
+</div>
