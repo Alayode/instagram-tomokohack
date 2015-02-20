@@ -68,6 +68,8 @@ function createToken(user) {
 }
 
 
+var app = express();
+
 
 /*
  |--------------------------------------------------------------------------
@@ -91,6 +93,13 @@ function createToken(user) {
 /*
  |--------------------------------------------------------------------------
  |  Create Email and Password Account
+ |
+ |  *this route is only for  checking if the email address is already taken( cannot have multiple
+ |   users with the same email.
+ |
+ |   * It then hashes the password using bcrypt and saves the user to the database.
+ |    this route is only responsible for creating a email and password sign up process.
+ |
  |--------------------------------------------------------------------------
  */
 
@@ -113,13 +122,113 @@ app.post('/auth/signup', function(req, res) {
             });
         });
     });
-})
+});
 
+/*
+ |--------------------------------------------------------------------------
+ |  Instagram Authentication Process route
+ |
+ |  Creating a separate route for processing instagram authentication.
+ |---------------------------------------------------------------------------
+ */
+app.post('/auth/instagram',function (req,res){
+    var accessTokenUrl = 'https://api.instagram.com/oauth/access_token';
 
+    var params = {
+        client_id: req.body.clientId,
+        redirect_url: req.body.redirectUri,
+        client_secret: config.clientSecret,
+        code: req.body.code,
+        grant_type: 'authorization_code'
+    };
 
+    //Exchange authorization code for access token.
 
+    request.post({ url: accessTokenUrl, form:params, json:true }, function(error,repsonse,body){
 
-var app = express();
+        //link user accounts
+        if (req.headers.authorization) {
+
+        User.findOne({ instagramId: body.user.id }, function(err,existingUser){
+
+            var token = req.headers.authorization.split(' ')[1];
+            var payload =jwt.decode(token,config.tokenSecret);
+
+            User.findById(payload.sub, '+password', function(err,localUser){
+                if(!localUser){
+                    return res.status(400).send({ message: 'User not found'});
+                }
+
+                //Merge the two accounts. Remember that the instagram account
+                //takes precedence. Email account will be deleted.
+
+                if(existingUser) {
+
+                    existingUser.email = localUser.email;
+                    existingUser.password = localUser.password;
+
+                    localUser.remove();
+
+                    existingUser.save(function(){
+                        var token = createToken(existingUser);
+                        return res.send({ token: token, user:existingUser });
+
+                    });
+
+                } else {
+                    // link current email account with the Instagram profile information.
+
+                    localUser.instagramId = body.user.id;
+                    localUser.username = body.user.username;
+                    localUser.fullName = body.user.full_name;
+                    localUser.picture = body.user.profile_picture;
+                    localUser.accessToken = body.access.token;
+
+                    localUser.save(function(){
+                        var token= createToken(localUser);
+                        res.send({ token: token, user:localUser });
+                    });
+                }
+            });
+
+        });
+
+        } else {
+            //or create  a new user account or return an existing one.
+
+            User.findOne({ instagramId: body.user.id }, function(err,existingUser){
+                if(existingUser) {
+                    var token = createToken(exisitingUser);
+                    return res.send({ token: toekn, user:existingUser });
+                }
+
+                var user = new User({
+                    instagramId: body.user.id,
+                    username: body.user.username,
+                    fullName:body.user.full_name,
+                    accessToken:body.user.profile_picture,
+                    picture:body.access_token
+                });
+
+                user.save(function(){
+                    var token = createToken(user);
+                    res.send({ token: token,user:user });
+                });
+            });
+
+        }
+    });
+});
+
+    app.get('/api/feed', isAuthenticated, function(req,res){
+        var mediaUrl = 'https://api.instagram.com/v1/media/' + req.params.id;
+        var params = { access_token: req.user.accessToken };
+
+        request.get({ url: mediaUrl, qs:params, json: true }, function(error,response,body){
+
+        })
+    })
+
 
 app.set('port', process.env.PORT || 3000);
 app.use(cors());
