@@ -225,10 +225,11 @@ app.post('/auth/instagram',function (req,res){
         var params = { access_token: req.user.accessToken };
 
         request.get({ url: mediaUrl, qs:params, json: true }, function(error,response,body){
-
-        })
-    })
-
+            if (!error && response.statusCode == 200) {
+                res.send(body.data);
+            }
+        });
+    });
 
 app.set('port', process.env.PORT || 3000);
 app.use(cors());
