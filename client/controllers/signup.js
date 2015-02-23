@@ -22,8 +22,8 @@
 
 
 
-angular.module('instagram')
-    .controller('signupCtrl',function($scope, $auth){
+angular.module('Instagram')
+    .controller('SignupCtrl',function($scope, $auth){
 
         $scope.signup = function(){
             var user = {
@@ -34,8 +34,15 @@ angular.module('instagram')
             //Satellizer
             $auth.signup(user)
                 .catch(function(response){
-                    console.log(response.data);14
+                    console.log(response.data);
+
+
                 });
         };
 
     });
+
+
+
+
+

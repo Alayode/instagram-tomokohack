@@ -35,17 +35,26 @@ $routeProvider
   })
   .otherwise('/');
 
-
   $authProvider.loginUrl = 'http://localhost:3000/auth/login';
   $authProvider.signupUrl = 'http://localhost:3000/auth/signup';
   $authProvider.oauth2({
     name: 'instagram',
-    url: 'http://localhost:3000/auth/instagram',
+    url: 'http://localhost:8000',
     redirectUri: 'http://localhost:8000',
-    ClientId: '799d1f8ea0e44ac8b70e7f18fcacedd1',
+    ClientId: 'be53d1c7f8e14f0ba14129c9c4690729',
     requiredUrlParams: ['scope'],
   scope: ['likes'],
   scopeDelimiter: '+',
   authorizationEndpoint: 'https://api.instagram.com/oauth/authorize'
     });
+})
+    /*
+by adding the run block it allows us to grab user object stored in the browser's local storage and assign it onto
+rootscope.currentUser
+
+*/
+.run(function($rootScope,$window,$auth){
+    if($auth.isAuthenticated()){
+        $rootScope.currentUser = JSON.parse($window.localStorage.currentUser);
+    }
 });
