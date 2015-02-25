@@ -19,12 +19,12 @@ angular.module('Instagram', ['ngRoute', 'ngMessages', 'satellizer'])
             })
             .otherwise('/');
 
-        $authProvider.loginUrl = 'http://evening-caverns-7271.herokuapp.com/auth/login';
-        $authProvider.signupUrl = 'http://evening-caverns-7271.herokuapp.com/auth/signup';
+        $authProvider.loginUrl = 'http://daitanrou-smashbros-2536.herokuapp.com/auth/login';
+        $authProvider.signupUrl = 'http://daitanrou-smashbros-2536.herokuapp.com/auth/signup';
         $authProvider.oauth2({
             name: 'instagram',
-            url: 'http://evening-caverns-7271.herokuapp.com/auth/instagram',
-            redirectUri: 'http://localhost:8000',
+            url: 'http://daitanrou-smashbros-2536.herokuapp.com/auth/instagram',
+            redirectUri: 'http://daitanrou-smashbros-2536:8000',
             clientId: 'be53d1c7f8e14f0ba14129c9c4690729',
             requiredUrlParams: ['scope'],
             scope: ['likes'],
