@@ -1,0 +1,19 @@
+{
+  "name": "instagram-tomokohack",
+  "version": "0.1.2",
+  "description": "an app for using instagram copy",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alayode/instagram-tomokohack.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alayode/instagram-tomokohack/issues"
+  },
+  "homepage": "https://github.com/Alayode/instagram-tomokohack"
+}
