@@ -19,11 +19,11 @@ angular.module('Instagram', ['ngRoute', 'ngMessages', 'satellizer'])
             })
             .otherwise('/');
 
-        $authProvider.loginUrl = 'http://localhost:3000/auth/login';
-        $authProvider.signupUrl = 'http://localhost:3000/auth/signup';
+        $authProvider.loginUrl = 'http://evening-caverns-7271.herokuapp.com/auth/login';
+        $authProvider.signupUrl = 'http://evening-caverns-7271.herokuapp.com/auth/signup';
         $authProvider.oauth2({
             name: 'instagram',
-            url: 'http://localhost:3000/auth/instagram',
+            url: 'http://evening-caverns-7271.herokuapp.com/auth/instagram',
             redirectUri: 'http://localhost:8000',
             clientId: 'be53d1c7f8e14f0ba14129c9c4690729',
             requiredUrlParams: ['scope'],
