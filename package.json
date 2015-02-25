@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Alayode/instagram-tomokohack/issues"
   },
-  "homepage": "https://github.com/Alayode/instagram-tomokohack"
+  "homepage": "https://github.com/Alayode/instagram-tomokohack",
+  "dependencies": {
+    "compression": "^1.4.1"
+  }
 }
